@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+	xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" >
+
+	<!-- ros_control plugin -->
+	<gazebo>
+		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+			<robotNamespace>/c2_arm</robotNamespace>
+			<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+		</plugin>
+	</gazebo>
+	
+	<!-- The Bottom  -->
+	<gazebo reference="bottom_link">
+		<material>Gazebo/White</material>
+		<turnGravityOff>false</turnGravityOff>
+	</gazebo>
+	
+	<!-- The Base -->
+	<gazebo reference="base_link">
+		<material>Gazebo/White</material>
+	</gazebo>
+	
+	<!-- The Shoulder Pan -->
+	<gazebo reference="shoulder_pan_link">
+		<material>Gazebo/Red</material>
+	</gazebo>
+
+	<!-- The Shoulder Pitch -->
+	<gazebo reference="shoulder_pitch_link">
+		<material>Gazebo/White</material>
+	</gazebo>
+	
+	<!-- The Elbow Roll -->
+	<gazebo reference="elbow_roll_link">
+		<material>Gazebo/Black</material>
+	</gazebo>
+	
+	<!-- The Elbow Pitch -->	
+	<gazebo reference="elbow_pitch_link">
+		<material>Gazebo/Red</material>
+	</gazebo>
+
+	<!-- The Wrist Roll -->
+	<gazebo reference="wrist_roll_link">
+		<material>Gazebo/Black</material>
+	</gazebo>
+	
+	<!-- The Wrist Pitch -->
+	<gazebo reference="wrist_pitch_link">
+		<material>Gazebo/White</material>
+	</gazebo>
+	
+	<!-- The Gripper Roll -->
+	<gazebo reference="gripper_roll_link">
+		<material>Gazebo/Red</material>
+	</gazebo>
+	
+	<!-- The Gripper Finger -->
+	<gazebo reference="gripper_finger_link1">
+		<material>Gazebo/White</material>
+	</gazebo>
+	
+	<gazebo reference="gripper_finger_link2">
+		<material>Gazebo/White</material>
+	</gazebo>
+
+</robot>

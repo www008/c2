@@ -1,0 +1,396 @@
+<?xml version="1.0"?>
+<robot name="c2_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<!-- Import common colors -->
+	<xacro:include filename="$(find c2_arm)/urdf/common.xacro" />
+
+	<!-- Constants for robot dimensions -->
+	<property name="M_SCALE" value="0.001 0.001 0.001"/> 
+
+	<property name="shoulder_pan_width" value="0.04" />
+	<property name="shoulder_pan_len" value="0.08" />
+
+	<property name="shoulder_pitch_len" value="0.14" />
+	<property name="shoulder_pitch_width" value="0.04" />
+	<property name="shoulder_pitch_height" value="0.04" />
+
+	<property name="elbow_roll_width" value="0.02" />
+	<property name="elbow_roll_len" value="0.06" />
+
+	<property name="elbow_pitch_len" value="0.22" />
+	<property name="elbow_pitch_width" value="0.04" />
+	<property name="elbow_pitch_height" value="0.04" />
+
+	<property name="wrist_roll_width" value="0.02" />
+	<property name="wrist_roll_len" value="0.04" />
+
+	<property name="wrist_pitch_len" value="0.06" />
+	<property name="wrist_pitch_width" value="0.04" />
+	<property name="wrist_pitch_height" value="0.04" />
+
+	<property name="gripper_roll_width" value="0.04" />
+	<property name="gripper_roll_len" value="0.02" />
+
+	<property name="left_gripper_len" value="0.08" />
+	<property name="left_gripper_width" value="0.01" />
+	<property name="left_gripper_height" value="0.01" />
+
+	<property name="right_gripper_len" value="0.08" />
+	<property name="right_gripper_width" value="0.01" />
+	<property name="right_gripper_height" value="0.01" />
+
+	<property name="grasp_frame_len" value="0.02" />
+	<property name="grasp_frame_width" value="0.02" />
+	<property name="grasp_frame_height" value="0.02" />
+
+	<!-- Import all Gazebo-customization elements, including Gazebo colors -->
+	<xacro:include filename="$(find c2_arm)/urdf/c2_arm.gazebo" />
+	
+	<!-- define macro -->
+	<xacro:macro name="inertial_matrix" params="mass">
+	  <inertial>
+		<mass value="${mass}" />
+		<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="0.5" iyz="0.0" izz="1.0" />
+	  </inertial>
+	</xacro:macro>
+
+	<xacro:macro name="transmission_block" params="joint_name">
+	  <transmission name="tran1">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="${joint_name}">
+		  <hardwareInterface>PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor1">
+		  <hardwareInterface>PositionJointInterface</hardwareInterface>
+		  <mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	  </transmission>
+	</xacro:macro>
+
+
+	<!-- The bottom -->
+	<link name="bottom_link">
+		<visual>
+			<origin xyz=" 0 0 -0.04"  rpy="0 0 0"/>
+			<geometry>
+			   <box size="1 1 0.02" />
+			</geometry>
+			<material name="Brown" />
+		</visual>
+		<collision>
+			<origin xyz=" 0 0 -0.04"  rpy="0 0 0"/>
+			<geometry>
+			   <box size="1 1 0.02" />
+			</geometry>
+		</collision>
+	</link>
+	
+	<joint name="bottom_joint" type="fixed">
+		<origin xyz="0 0 0" rpy="0 0 0" />
+		<parent link="base_link"/>
+		<child link="bottom_link"/>
+	</joint>
+
+	<!-- The Base -->
+	<link name="base_link">
+		<visual>
+			<origin xyz="0 0 0" rpy="${PI/2} 0 0" />
+			<geometry>
+				<box size="0.1 0.1 0.1" />
+			</geometry>
+			<material name="White" />
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="${PI/2} 0 0" />
+			<geometry>
+				<box size="0.1 0.1 0.1" />
+			</geometry>
+		</collision>>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+
+	<!-- The Shoulder Pan -->
+	<link name="shoulder_pan_link" >
+		<visual>
+			<origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<cylinder radius="${shoulder_pan_width}" length="${shoulder_pan_len}"/>
+			</geometry>
+			<material name="Red" />
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<cylinder radius="${shoulder_pan_width}" length="${shoulder_pan_len}"/>
+			</geometry>
+		</collision>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+	
+	<joint name="shoulder_pan_joint" type="revolute">
+		<parent link="base_link"/>
+		<child link="shoulder_pan_link"/>
+		<origin xyz="0 0 0.05" rpy="0 ${M_PI/2} ${M_PI*0}" />
+		<axis xyz="-1 0 0" />
+		<limit effort="300" velocity="1" lower="-2.61799387799" upper="1.98394848567"/>
+		<dynamics damping="50" friction="1"/>
+	</joint>
+
+	<!-- The Shoulder Pitch -->
+	<link name="shoulder_pitch_link" >
+		<visual>
+			<origin xyz="-0.002 0 0.04" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<box size="${shoulder_pitch_len} ${shoulder_pitch_width} ${shoulder_pitch_height}" />
+			</geometry>
+			<material name="White" />
+		</visual>
+		<collision>
+			<origin xyz="-0.002 0 0.04" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<box size="${shoulder_pitch_len} ${shoulder_pitch_width} ${shoulder_pitch_height}" />
+			</geometry>
+		</collision>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+	
+	<joint name="shoulder_pitch_joint" type="revolute">
+		<origin xyz="-0.041 0.0021 0.0" rpy="-${M_PI/2} 0 ${M_PI/2}" />
+		<parent link="shoulder_pan_link"/>
+		<child link="shoulder_pitch_link"/>
+		<axis xyz="1 0 0" />
+		<limit effort="300" velocity="1" lower="-1.19962513147" upper="1.89994105047" />
+		<dynamics damping="50" friction="1"/>
+	</joint>
+
+	<!-- The Elbow Roll -->
+	<link name="elbow_roll_link" >
+		<visual>
+		<origin xyz="-0.015 0.0 -0.0" rpy="0 ${M_PI/2} 0" />
+		<geometry>
+
+			<cylinder radius="${elbow_roll_width}" length="${elbow_roll_len}"/>
+
+		</geometry>
+		<material name="Black" />
+		</visual>
+
+		<collision>
+		<origin xyz="-0.015 0.0 -0.0" rpy="0 ${M_PI/2} 0" />
+		<geometry>
+			<cylinder radius="${elbow_roll_width}" length="${elbow_roll_len}"/>
+		</geometry>
+		</collision>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+
+	<joint name="elbow_roll_joint" type="revolute">
+		<origin xyz="-0.002 0 0.1206" rpy="${M_PI} ${M_PI/2} 0" />
+		<parent link="shoulder_pitch_link"/>
+		<child link="elbow_roll_link"/>
+		<axis xyz="-1 0 0" />
+		<limit effort="300" velocity="1" lower="-2.61799387799" upper="0.705631162427" />
+		<dynamics damping="50" friction="1"/>
+	</joint>
+
+	<!-- The Elbow Pitch -->
+	<link name="elbow_pitch_link" >
+		<visual>
+			<origin xyz="0 0 -0.12" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<box size="${elbow_pitch_len} ${elbow_pitch_width} ${elbow_pitch_height}" />
+			</geometry>
+			<material name="Red" />
+		</visual>
+		<collision>
+			<origin xyz="0 0 -0.12" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<box size="${elbow_pitch_len} ${elbow_pitch_width} ${elbow_pitch_height}" />
+			</geometry>
+		</collision>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+
+	<joint name="elbow_pitch_joint" type="revolute">
+		<origin xyz="-0.035 0 0.0" rpy="0.055 ${M_PI/2} 0" />
+		<parent link="elbow_roll_link"/>
+		<child link="elbow_pitch_link"/>
+		<axis xyz="1 0 0" />
+		<limit effort="300" velocity="1" lower="-1.5953400194" upper="1.93281579274" />
+		<dynamics damping="50" friction="1"/>
+	</joint>
+
+	<!-- The Wrist Roll -->
+	<link name="wrist_roll_link" >
+		<visual>
+			<origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<cylinder radius="${elbow_roll_width}" length="${elbow_roll_len}"/>
+			</geometry>
+			<material name="Black" />
+		</visual>
+
+		<collision>
+			<origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<cylinder radius="${elbow_roll_width}" length="${elbow_roll_len}"/>
+			</geometry>
+		</collision>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+	
+	<joint name="wrist_roll_joint" type="revolute">
+		<origin xyz="0.0 0.0081 -.248" rpy="0 ${M_PI/2} ${M_PI}" />
+		<parent link="elbow_pitch_link"/>
+		<child link="wrist_roll_link"/>
+		<axis xyz="1 0 0" />
+		<limit effort="300" velocity="1" lower="-2.61799387799" upper="2.6128806087" />
+		<dynamics damping="50" friction="1"/>
+	</joint>
+
+	<!-- The Wrist Pitch -->
+	<link name="wrist_pitch_link">
+		<visual>
+			<origin xyz="0 0 0.04" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<box size="${wrist_pitch_len} ${wrist_pitch_width} ${wrist_pitch_height}" />
+			</geometry>
+			<material name="White" />
+		</visual>
+		<collision>
+			<origin xyz="0 0 0.04 " rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<box size="${wrist_pitch_len} ${wrist_pitch_width} ${wrist_pitch_height}" />
+			</geometry>
+		</collision>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+	
+	<joint name="wrist_pitch_joint" type="revolute">
+		<parent link="wrist_roll_link"/>
+		<child link="wrist_pitch_link"/>
+		<origin xyz="0.0 0.0 0.0001" rpy="0 ${M_PI/2} 0" />
+		<axis xyz="1 0 0" />
+		<limit effort="300" velocity="1" lower="-1.5953400194" upper="1.98394848567" />
+		<dynamics damping="50" friction="1"/>
+	</joint>
+	
+	
+	<!-- The Gripper Roll -->
+	<link name="gripper_roll_link">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<cylinder radius="${gripper_roll_width}" length="${gripper_roll_len}"/>
+			</geometry>
+			<material name="Red" />
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+			<geometry>
+				<cylinder radius="${gripper_roll_width}" length="${gripper_roll_len}"/>
+			</geometry>
+		</collision>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+
+	<joint name="gripper_roll_joint" type="revolute">
+		<origin xyz="0 0 0.080" rpy="${1.5*M_PI} -${.5*M_PI} 0" />
+		<parent link="wrist_pitch_link"/>
+		<child link="gripper_roll_link"/>
+		<axis xyz="1 0 0" />
+		<limit effort="300" velocity="1" lower="-2.61799387799" upper="2.6128806087" />
+		<dynamics damping="50" friction="1"/>
+	</joint>
+
+	<!-- The Gripper Finger -->
+	<link name="gripper_finger_link1">
+		<visual>
+			<origin xyz="0.04 -0.03 0"/>
+			<geometry>
+				<box size="${left_gripper_len} ${left_gripper_width} ${left_gripper_height}" />
+			</geometry>
+			<material name="White" />
+		</visual>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+
+	<joint name="finger_joint1" type="prismatic">
+		<origin xyz="0.0 0 0" />
+		<parent link="gripper_roll_link"/>
+		<child link="gripper_finger_link1"/>
+		<axis xyz="0 1 0" />
+		  <limit effort="100" lower="0" upper="0.03" velocity="1.0"/>
+		  <safety_controller k_position="20"
+							 k_velocity="20"
+							 soft_lower_limit="${-0.15 }"
+							 soft_upper_limit="${ 0.0 }"/>
+		<dynamics damping="50" friction="1"/>
+	</joint>
+
+	<link name="gripper_finger_link2">
+		<visual>
+			<origin xyz="0.04 0.03 0"/>
+			<geometry>
+				<box size="${right_gripper_len} ${right_gripper_width} ${right_gripper_height}" />
+			</geometry>
+			<material name="White" />
+		</visual>
+		<xacro:inertial_matrix mass="1"/>
+	</link>
+
+	<joint name="finger_joint2" type="prismatic">
+		<origin xyz="0.0 0 0" />
+		<parent link="gripper_roll_link"/>
+		<child link="gripper_finger_link2"/>
+		<axis xyz="0 1 0" />
+		<limit effort="1" lower="-0.03" upper="0" velocity="1.0"/>
+		<dynamics damping="50" friction="1"/>
+	</joint> 
+
+
+	<link name="grasping_frame">
+		<visual>
+			<origin xyz="0 0 0"/>
+			<geometry>
+				<box size="${grasp_frame_len} ${grasp_frame_width} ${grasp_frame_height}" />
+			</geometry>
+			<material name="White" />
+		</visual>
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<mass value="0.0001"/>
+			<cuboid_inertia mass="0.0001" x="0.001" y="0.001" z="0.001"/>
+			<inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="100.0"  iyz="0.0"  izz="1.0" />
+		</inertial>
+	</link>
+
+	<joint name="grasping_frame_joint" type="fixed">
+		<origin xyz="0.08 0 0" rpy="0 0 0"/>
+		<parent link="gripper_roll_link"/>
+		<child link="grasping_frame"/>
+	</joint>
+
+	<xacro:include filename="$(find mastering_ros_robot_description_pkg)/urdf/sensors/xtion_pro_live.urdf.xacro"/>
+	
+	<xacro:transmission_block joint_name="shoulder_pan_joint"/>
+	<xacro:transmission_block joint_name="shoulder_pitch_joint"/>
+	<xacro:transmission_block joint_name="elbow_roll_joint"/>
+	<xacro:transmission_block joint_name="elbow_pitch_joint"/>
+	<xacro:transmission_block joint_name="wrist_roll_joint"/>
+	<xacro:transmission_block joint_name="wrist_pitch_joint"/>
+	<xacro:transmission_block joint_name="gripper_roll_joint"/>
+	<xacro:transmission_block joint_name="finger_joint1"/>
+	<xacro:transmission_block joint_name="finger_joint2"/>
+
+	<!-- Define arm with gripper mounted on a base -->
+	<xacro:base name="base"/>
+	<xacro:arm parent="base"/>
+	<xacro:gripper parent="tool"/>
+
+	<!-- Define RGB-D sensor -->
+	<xacro:xtion_pro_live name="rgbd_camera" parent="base">
+		<origin xyz="0.1 0 1" rpy="0 ${75.0 * deg_to_rad} 0"/>
+		<origin xyz="0 0 0" rpy="${-90.0 * deg_to_rad} 0 ${-90.0 * deg_to_rad}"/>
+	</xacro:xtion_pro_live>
+
+</robot>
