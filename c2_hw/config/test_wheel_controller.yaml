@@ -1,0 +1,97 @@
+# ******** hardware interface *********
+generic_hw_control_loop:
+  loop_hz: 30
+  cycle_time_error_threshold: 0.1
+
+hardware_interface:
+  joints:
+    - wheel_left_joint
+    - wheel_right_joint
+  wheel_left_joint:
+    cmd_topic: hardware/wheels/l_cmd_vel
+    state_topic: hardware/wheels/l_vel
+  wheel_right_joint:
+    cmd_topic: hardware/wheels/r_cmd_vel
+    state_topic: hardware/wheels/r_vel
+
+# *******  controller ****************
+# Publish all joint states ------------------------
+joint_state_controller:
+  type:         joint_state_controller/JointStateController
+  publish_rate: 50
+    
+# Individual joint Controllers --------------------
+wheel_left_joint_controller:
+  type:  effort_controllers/JointVelocityController
+  joint: wheel_left_joint
+  pid: 
+    p: 10.0
+    i: 0.01
+    d: 1.0
+    i_clamp: 1.0
+    #i_clamp_min: -1.0
+    #i_clamp_max: 1.0
+    #antiwindup: false #积分抗饱和
+    publish_state: true
+
+
+wheel_right_joint_controller:
+  type:  effort_controllers/JointVelocityController
+  joint: wheel_right_joint
+  pid: 
+    p: 10.0
+    i: 0.01
+    d: 1.0
+    i_clamp: 1.0
+    #i_clamp_min: -1.0
+    #i_clamp_max: 1.0
+    #antiwindup: false #积分抗饱和
+    publish_state: true
+
+# Diff control ----------------- 
+diff_drive_controller:
+  type        : diff_drive_controller/DiffDriveController
+  left_wheel  : wheel_left_joint
+  right_wheel : wheel_right_joint
+  publish_rate: 50.0
+  pose_covariance_diagonal : [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]
+  twist_covariance_diagonal: [0.001, 0.001, 1.0e-3, 1.0e-3, 1.0e-3, 0.01]
+
+  enable_pose_covariance_update: true
+  error_constant_left : 0.001
+  error_constant_right: 0.001
+
+  # Velocity commands timeout [s]
+  cmd_vel_timeout: 0.25
+
+  # Base frame_id
+  base_frame_id: base_footprint
+
+  # Preserve turning radius when limiting speed/acceleration/jerk
+  preserve_turning_radius: true
+
+  # Publish limited velocity
+  publish_cmd: false
+
+  # Publish wheel data
+  publish_wheel_data: true
+
+  # Velocity and acceleration limits
+  # Whenever a min_* is unspecified, default to -max_*
+  linear:
+    x:
+      has_velocity_limits    : true
+      max_velocity           :  1.0 # m/s
+      min_velocity           : -0.2 # m/s
+      has_acceleration_limits: true
+      max_acceleration       :  1.0 # m/s^2
+      has_jerk_limits        : false
+      max_jerk               :  5.0 # m/s^3
+  angular:
+    z:
+      has_velocity_limits    : true
+      max_velocity           : !degrees 120.0
+      has_acceleration_limits: true
+      max_acceleration       : !degrees 120.0
+      has_jerk_limits        : false
+      max_jerk               : !degrees 600.0

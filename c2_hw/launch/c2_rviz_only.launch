@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- my joint state -->
+	<!-- node name="mycar_joint_state" pkg="c2_hw" type="mycar_joint_state" / -->
+	<!-- my odometry -->
+	<!-- node name="mycar_odometry" pkg="c2_hw" type="mycar_odometry" / -->
+	<!-- my senser -->
+	<!-- node name="mycar_laser_scan" pkg="c2_hw" type="mycar_laser_scan" / -->
+
+	<!-- Show in Rviz   -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find c2_hw)/world/c2_nav.rviz" >
+		<!-- remap from="robot_description" to="/c2/robot_description" / -->
+	</node>
+
+</launch>

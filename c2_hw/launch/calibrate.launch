@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+	<env name="ROSCONSOLE_CONFIG_FILE" value="$(find c2_hw)/config/c2_logger.config"/>
+	
+	<!-- differential_teleop_key already has its own built in velocity smoother -->
+	<!-- node pkg="turtlesim" type="turtle_teleop_key" name="key_teleop"  output="screen">
+		<param name="scale_linear" value="0.5" type="double"/>
+		<param name="scale_angular" value="1.5" type="double"/>
+		<remap from="/turtle1/cmd_vel" to="/c2/mobile_controller/cmd_vel"/> 
+	</node -->
+	
+	<node pkg="c2_hw" type="calibrate" name="calibrate_tool"  output="screen">
+		<remap from="/calibrate/lwheel_vtarget" to="/c2/hardware/wheels/l_cmd_vel"/>
+		<remap from="/calibrate/rwheel_vtarget" to="/c2/hardware/wheels/r_cmd_vel"/>
+	</node>
+</launch>

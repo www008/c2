@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+	<env name="ROSCONSOLE_CONFIG_FILE" value="$(find c2_hw)/config/c2_logger.config"/>
+	
+	<!-- differential_teleop_key already has its own built in velocity smoother -->
+	<!-- node pkg="turtlesim" type="turtle_teleop_key" name="key_teleop"  output="screen">
+		<param name="scale_linear" value="0.5" type="double"/>
+		<param name="scale_angular" value="1.5" type="double"/>
+		<remap from="/turtle1/cmd_vel" to="/c2/mobile_controller/cmd_vel"/> 
+	</node -->
+	
+	<node pkg="c2_hw" type="teleop_key" name="teleop_key"  output="screen">
+		<param name="max_line_speed" value="0.5" type="double"/>
+		<param name="min_line_speed" value="0.2" type="double"/>
+		<param name="max_angular_speed" value="3.14" type="double"/>
+		<param name="min_angular_speed" value="0.1" type="double"/>
+		<param name="scale_linear" value="10" type="int"/>
+		<param name="scale_angular" value="10" type="int"/>
+		<!-- remap from="/cmd_vel" to="/c2/mobile_controller/cmd_vel"/ --> 
+	</node>
+	
+	<!-- node pkg="c2_hw" type="diff_drive_motors" name="diff_drive_motors"  output="screen">
+		<param name="wheel_separation" value="0.12" type="double"/>
+		<param name="wheel_radius" value="0.032" type="double"/>
+		<param name="base_frame_id" value="base_footprint" type="string"/>
+		<param name="loop_hz" value="5" type="double"/>
+		<param name="cmd_vel_timeout" value="5" type="double"/>
+		<remap from="cmd_vel" to="/c2/mobile_controller/cmd_vel"/> 
+	</node -->
+</launch>

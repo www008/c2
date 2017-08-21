@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+	<group ns="/c2" >
+		<include file="$(find c2_hw)/launch/c2_description.launch" />
+
+		<!-- my joint state -->
+		<!-- node name="mycar_joint_state" pkg="c2_hw" type="mycar_joint_state" / -->
+		<!-- my odometry -->
+		<!-- node name="mycar_odometry" pkg="c2_hw" type="mycar_odometry" / -->
+		<!-- my senser -->
+		<!-- node name="mycar_laser_scan" pkg="c2_hw" type="mycar_laser_scan" / -->
+		
+		<!-- remap from="robot_description" to="/c2/robot_description" / -->
+		<!-- send fake joint values -->
+		<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+			<param name="use_gui" value="FALSE"/>
+		</node>
+
+		<!-- Combine joint values -->
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" >
+		</node>
+
+		<!-- Show in Rviz   -->
+		<node name="rviz" pkg="rviz" type="rviz" args="-d $(find c2_hw)/world/c2.rviz" >
+		</node>
+	</group>
+</launch>

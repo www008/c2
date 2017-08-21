@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<launch>
+	<env name="ROSCONSOLE_CONFIG_FILE" value="$(find c2_hw)/config/c2_logger.config"/>
+<rosparam ns="tool_wheel_step">
+plan:
+  - {t: 10, l: -810, r: -810}
+  - {t: 10, l: -800, r: -800}
+  - {t: 10, l: -750, r: -750}
+  - {t: 10, l: -700, r: -700}
+  - {t: 10, l: -650, r: -650}
+  - {t: 10, l: -600, r: -600}
+  - {t: 10, l: -550, r: -550}
+  - {t: 10, l: -500, r: -500}
+  - {t: 10, l: -450, r: -450}
+  - {t: 10, l: -400, r: -400}
+  - {t: 10, l: -350, r: -350}
+  - {t: 10, l: -300, r: -300}
+  - {t: 10, l: -250, r: -250}
+  - {t: 10, l: -200, r: -200}
+  - {t: 10, l: -150, r: -150}
+  - {t: 10, l: -100, r: -100}
+  - {t: 10, l:  -50, r:  -50}
+  - {t: 10, l:   -5, r:   -5}
+  - {t: 10, l:   -1, r:   -1}
+  - {t: 10, l:    1, r:    1}
+  - {t: 10, l:    5, r:    5}
+  - {t: 10, l:   50, r:   50}
+  - {t: 10, l:  100, r:  100}
+  - {t: 10, l:  150, r:  150}
+  - {t: 10, l:  200, r:  200}
+  - {t: 10, l:  250, r:  250}
+  - {t: 10, l:  300, r:  300}
+  - {t: 10, l:  350, r:  350}
+  - {t: 10, l:  400, r:  400}
+  - {t: 10, l:  450, r:  450}
+  - {t: 10, l:  500, r:  500}
+  - {t: 10, l:  550, r:  550}
+  - {t: 10, l:  600, r:  600}
+  - {t: 10, l:  650, r:  650}
+  - {t: 10, l:  700, r:  700}
+  - {t: 10, l:  750, r:  750}
+  - {t: 10, l:  800, r:  800}
+  - {t: 10, l:  810, r:  810}
+</rosparam>
+	<node name="tool_wheel_step" pkg="c2_hw" type="tool_wheel_step" output="screen">
+		<remap from="/lwheel_vtarget" to="/c2/hardware/wheels/l_cmd_vel"/>
+		<remap from="/rwheel_vtarget" to="/c2/hardware/wheels/r_cmd_vel"/>
+		<remap from="/lwheel_state" to="/c2/hardware/wheels/l_vel"/>
+		<remap from="/rwheel_state" to="/c2/hardware/wheels/r_vel"/>
+	</node>
+</launch>

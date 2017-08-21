@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- Logger config -->
+	<env name="ROSCONSOLE_CONFIG_FILE" value="$(find c2_hw)/config/c2_logger.config"/>
+	
+	<group ns="c2">
+		<!-- Load joint controller configurations from YAML file to parameter server -->
+		<rosparam file="$(find c2_hw)/config/c2_mobile_controller.yaml" command="load"/>
+
+		<!-- Load hardware interface -->
+		<node name="c2_hw" pkg="c2_hw" type="c2_server" output="screen" />
+			  
+		<!-- load the controllers -->
+		<!-- node name="c2_controller_spawner" pkg="controller_manager" type="spawner" 
+			output="screen" ns="/c2" args="mobile_controller joint_state_controller" / -->
+			
+		<node name="c2_cm" pkg="controller_manager" type="spawner" respawn="false"  output="screen" 
+			args=" mobile_controller joint_state_controller" />
+
+		<!-- convert joint states to TF transforms for rviz, etc -->
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+			<remap from="robot_description" to="/c2/robot_description" />
+			<remap from="joint_states" to="/c2/joint_states" />
+		</node>
+	</group>
+</launch>

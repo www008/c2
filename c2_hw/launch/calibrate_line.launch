@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+	<env name="ROSCONSOLE_CONFIG_FILE" value="$(find c2_hw)/config/c2_logger.config"/>
+	<!-- node name="calibrate_line" pkg="c2_hw" type="calibrate_linear" args="P 10 -1,-1" -->
+	<node name="calibrate_line" pkg="c2_hw" type="calibrate_linear" args="V 10 -0.5,-0.5" >
+		<remap from="lwheel_vtarget" to="/c2/hardware/wheels/l_cmd_vel"/> 
+		<remap from="rwheel_vtarget" to="/c2/hardware/wheels/r_cmd_vel"/>
+	</node>
+</launch>
